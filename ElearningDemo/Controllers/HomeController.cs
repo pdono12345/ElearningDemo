@@ -1,5 +1,4 @@
-﻿using ElearningDemo.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ElearningDemo.Controllers
