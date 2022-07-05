@@ -10,6 +10,11 @@ namespace ElearningDemoRepositories.Data
         {
             context.Database.EnsureCreated();
 
+            if (context.Managers.Any())
+            {
+                return;   // DB has been seeded
+            }
+
             var manager = new Manager
             {
                 Name = "Developer",
@@ -25,40 +30,82 @@ namespace ElearningDemoRepositories.Data
             var members = new Member[]
             {
                 new Member{ Username="T001", Password="T001", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
+                new Member{ Username="T002", Password="T002", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
+                new Member{ Username="T003", Password="T003", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
                 new Member{ Username="S001", Password="S001", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
                 new Member{ Username="S002", Password="S002", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
+                new Member{ Username="S003", Password="S003", CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false },
             };
             context.Members.AddRange(members);
             context.SaveChanges();
 
-            var teacher = new Teacher
+            var teachers = new Teacher[]
             {
-                MemberId = 1,
-                Name = "Peter",
-                CreatedAt = DateTime.Now,
-                IsValid = true,
-                IsDeleted = false,
+                new Teacher
+                {
+                    MemberId = 1,
+                    Name = "Steve",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,
+                },
+                new Teacher
+                {
+                    MemberId = 2,
+                    Name = "Kenny",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,
+                },
+                new Teacher
+                {
+                    MemberId = 3,
+                    Name = "Mike",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,
+                },
             };
-            context.Teachers.Add(teacher);
+            context.Teachers.AddRange(teachers);
             context.SaveChanges();
 
             var students = new Student[]
             {
-                new Student{ Name="James", MemberId=2, CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false},
-                new Student{ Name="Kevin", MemberId=3, CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false},
+                new Student{ Name="Steph", MemberId=4, CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false},
+                new Student{ Name="Klay", MemberId=5, CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false},
+                new Student{ Name="Draymond", MemberId=6, CreatedAt=DateTime.Now, IsValid=true, IsDeleted=false},
             };
             context.Students.AddRange(students);
             context.SaveChanges();
 
-            var classroom = new Classroom
+            var classrooms = new Classroom[]
             {
-                TeacherId = 1,
-                Name = "101",
-                CreatedAt = DateTime.Now,
-                IsValid = true,
-                IsDeleted = false,
+                new Classroom
+                {
+                    TeacherId = 1,
+                    Name = "101",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,     
+                },
+                new Classroom
+                {
+                    TeacherId = 2,
+                    Name = "102",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,
+                },
+                new Classroom
+                {
+                    TeacherId = 3,
+                    Name = "103",
+                    CreatedAt = DateTime.Now,
+                    IsValid = true,
+                    IsDeleted = false,
+                },
             };
-            context.Classrooms.Add(classroom);
+            context.Classrooms.AddRange(classrooms);
             context.SaveChanges();
         }
     }
