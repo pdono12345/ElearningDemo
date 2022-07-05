@@ -10,11 +10,11 @@ namespace ElearningDemoRepositories.Entities
     public class Quiz
     {
         public int Id { get; set; }
-        public string Question { get; set; }
-        public string OptionA { get; set; }
-        public string OptionB { get; set; }
-        public string OptionC { get; set; }
-        public string OptionD { get; set; }
+        public string? Question { get; set; }
+        public string? OptionA { get; set; }
+        public string? OptionB { get; set; }
+        public string? OptionC { get; set; }
+        public string? OptionD { get; set; }
         public CorrectOption CorrectOption { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -22,8 +22,8 @@ namespace ElearningDemoRepositories.Entities
         public bool IsDeleted { get; set; }
         public int ClassroomId { get; set; }
 
-        public Classroom Classroom { get; set; }
-        public ICollection<Student> Students { get; set; }
+        public Classroom? Classroom { get; set; }
+        public ICollection<Student>? Students { get; set; }
     }
     public enum CorrectOption
     {
