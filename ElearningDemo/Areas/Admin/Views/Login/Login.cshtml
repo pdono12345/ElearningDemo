@@ -1,0 +1,39 @@
+﻿@model ElearningDemo.Areas.Admin.ViewModels.LoginViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "登入";
+}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - 管理員後台</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ElearningDemo.styles.css" asp-append-version="true" />
+</head>
+<body class="text-center body-signin">
+    <main class="form-signin">
+        <form asp-action="Login" asp-controller="Login" asp-area="admin" method="POST">
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            <p class="text-danger text-center mb-3">@ViewBag.ValidateMsg</p>
+            <div class="form-floating">
+                <input class="form-control" asp-for="Username" placeholder="Username" required>
+                <label asp-for="Username">Username</label>
+            </div>
+            <div class="form-floating">
+                <input class="form-control" asp-for="Password" placeholder="Password" required>
+                <label asp-for="Password">Password</label>
+            </div>
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">© 2020-2022</p>
+        </form>
+    </main>
+</body>
+</html>
