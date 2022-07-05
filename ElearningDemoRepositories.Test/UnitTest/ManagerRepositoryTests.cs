@@ -175,10 +175,10 @@ public class ManagerRepositoryTests
         Assert.That(managers.Any(m => m.IsDeleted == true), Is.False);
     }
 
-    private async Task<MenagerRepository> CreateRepositoryAsync(ElearningDemoContext context)
+    private async Task<ManagerRepository> CreateRepositoryAsync(ElearningDemoContext context)
     {
         await GetSeedingManagers(context);
-        return new MenagerRepository(context);
+        return new ManagerRepository(context);
     }
 
     private static async Task GetSeedingManagers(ElearningDemoContext context)
