@@ -1,31 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using ElearningDemo.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ElearningDemo.Controllers
+namespace ElearningDemo.Controllers;
+[AllowAnonymous]
+public class HomeController : BaseController
 {
-    public class HomeController : Controller
+    private readonly ITeacherService _teacherService;
+
+    public HomeController(ILogger<HomeController> logger, IConfiguration config, IMapper mapper, ITeacherService teacherService) : base(logger, config, mapper)
     {
-        private readonly ILogger<HomeController> _logger;
+        _teacherService = teacherService;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult Index()
+    {
+        return View();
+    }
+    public async Task<IActionResult> Teachers()
+    {
+        var validTeachers = _mapper.Map<List<HomeTeacherViewModel>>(await _teacherService.GetAllValidTeachersAsync());
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View();
-        }
+        return View(validTeachers);
     }
 }

@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ElearningDemo.Areas.Admin.Controllers
+namespace ElearningDemo.Areas.Admin.Controllers;
+public class HomeController : BaseController
 {
-    [Area("admin")]
-    public class HomeController : Controller
+    public HomeController(ILogger<HomeController> logger, IConfiguration config, IMapper mapper) : base(logger, config, mapper)
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+    }
+
+    public IActionResult Index()
+    {
+        return View();
     }
 }
+
