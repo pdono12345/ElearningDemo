@@ -29,7 +29,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         return _db.Set<TEntity>();
     }
-    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>?> GetAllAsync()
     {
         return await _db.Set<TEntity>().ToListAsync();
     }
@@ -38,12 +38,12 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         return _db.Set<TEntity>();
     }
 
-    public virtual TEntity GetOne(Expression<Func<TEntity, bool>> condition)
+    public virtual TEntity? GetOne(Expression<Func<TEntity, bool>> condition)
     {
         return _db.Set<TEntity>().AsNoTracking().FirstOrDefault(condition);
     }
 
-    public virtual async Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> condition)
+    public virtual async Task<TEntity?> GetOneAsync(Expression<Func<TEntity, bool>> condition)
     {
         return await _db.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(condition);
     }
@@ -63,12 +63,12 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         if (existingEntity != null) { _db.Entry(existingEntity).State = EntityState.Detached; }
     }
 
-    public virtual Task<IEnumerable<TEntity>> GetAllValidAsync()
+    public virtual Task<IEnumerable<TEntity>?> GetAllValidAsync()
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task<IEnumerable<TEntity>> GetAllAliveAsync()
+    public virtual Task<IEnumerable<TEntity>?> GetAllAliveAsync()
     {
         throw new NotImplementedException();
     }

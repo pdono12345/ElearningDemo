@@ -6,39 +6,39 @@ public interface IBaseRepository<TEntity> where TEntity : class
     ///     回傳 IQueryable 讓 Service 可以處理較複雜的查詢
     /// </summary>
     /// <returns></returns>
-    IQueryable<TEntity> Query();
+    IQueryable<TEntity>? Query();
     /// <summary>
     /// 回傳所有 data 沒有做任何篩選
     /// </summary>
     /// <returns></returns>
-    IEnumerable<TEntity> GetAll();
+    IEnumerable<TEntity>? GetAll();
     /// <summary>
     ///     回傳所有 data 沒有任何篩選
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<IEnumerable<TEntity>?> GetAllAsync();
     /// <summary>
     ///     須 override，回傳 IsValid = true && IsDeleted = false 的所有 data
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetAllValidAsync();
+    Task<IEnumerable<TEntity>?> GetAllValidAsync();
     /// <summary>
     ///     須 override，回傳 IsDeleted = false 的所有 data
     /// </summary>
     /// <returns></returns>
-    Task<IEnumerable<TEntity>> GetAllAliveAsync();
+    Task<IEnumerable<TEntity>?> GetAllAliveAsync();
     /// <summary>
     /// 搜尋單筆資料，可輸入條件表示式
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetOneAsync(Expression<Func<TEntity, bool>> predicate);
     /// <summary>
     /// 搜尋單筆資料，可輸入條件表示式
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    TEntity GetOne(Expression<Func<TEntity, bool>> predicate);
+    TEntity? GetOne(Expression<Func<TEntity, bool>> predicate);
     /// <summary>
     /// 預設 insert 之後回傳 null
     /// </summary>
