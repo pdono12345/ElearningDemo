@@ -1,19 +1,19 @@
 ﻿namespace ElearningDemoRepositories.Repositories;
 
-public class MenagerRepository : BaseRepository<Manager>, IManagerRepository
+public class ManagerRepository : BaseRepository<Manager>, IManagerRepository
 {
-    public MenagerRepository(ElearningDemoContext db) : base(db)
+    public ManagerRepository(ElearningDemoContext db) : base(db)
     {
     }
 
-    public override async Task<IEnumerable<Manager>> GetAllAliveAsync()
+    public override async Task<IEnumerable<Manager>?> GetAllAliveAsync()
     {
         return await _db.Managers
             .Where(m => m.IsDeleted == false)
             .ToListAsync();
     }
 
-    public override async Task<IEnumerable<Manager>> GetAllValidAsync()
+    public override async Task<IEnumerable<Manager>?> GetAllValidAsync()
     {
         return await _db.Managers
             .Where(m => m.IsValid == true)
