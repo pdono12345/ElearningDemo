@@ -3,15 +3,13 @@
 public class ManagerRepositoryTests
 {
     [Test]
-    public async Task CreateManagerAsync_ManagerIsAdded()
+    public async Task CreateManagerAsync_CreateNewManager_ManagerIsAdded()
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
-        var recordId = 123;
         var expectedManager = new Manager
         {
-            Id = recordId,
             Name = "unitTest",
             Username = "unitTest",
             Password = "unitTest",
@@ -19,23 +17,25 @@ public class ManagerRepositoryTests
             IsValid = true,
             IsDeleted = false,
         };
+        var newManagerId = 4;   // because there are 3 seeding managers which Ids are 1, 2, 3
 
         // Act
         fakeRepository.Create(expectedManager);
         await context.SaveChangesAsync();
 
         // Assert
-        var actualManager = context.Managers.Single(m => m.Id == recordId);
+        var actualManager = context.Managers.Single(m => m.Id == newManagerId);
         Assert.That(actualManager, Is.EqualTo(expectedManager));
     }
 
     [Test]
-    public async Task UpdateManagerAsync_ManagerIsUpdated()
+    public async Task UpdateManagerAsync_UpdateManager_ManagerIsUpdated()
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
-        var existedManager = await context.Managers.SingleAsync(m => m.Id == 1);
+        var targetManagerId = 1;
+        var existedManager = await context.Managers.SingleAsync(m => m.Id == targetManagerId);
 
         // Act
         existedManager.Name = "UpdatedName";
@@ -43,35 +43,38 @@ public class ManagerRepositoryTests
         await context.SaveChangesAsync();
 
         // Assert
-        var updatedManager = context.Managers.Single(m => m.Id == 1);
+        var updatedManager = context.Managers.Single(m => m.Id == targetManagerId);
         Assert.That(updatedManager.Name, Is.EqualTo("UpdatedName"));
     }
 
-    [Test]
-    public async Task SoftDeleteManager_ManagerIsSoftDeleted()
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public async Task SoftDeleteManager_InputManagerId_ManagerIsSoftDeleted(int targetManagerId)
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
 
         // Act
-        fakeRepository.SoftDelete(1);
+        fakeRepository.SoftDelete(targetManagerId);
         await context.SaveChangesAsync();
 
         // Assert
-        var deletedManager = context.Managers.Single(m => m.Id == 1);
+        var deletedManager = context.Managers.Single(m => m.Id == targetManagerId);
         Assert.That(deletedManager.IsDeleted, Is.EqualTo(true));
     }
 
-    [Test]
-    public async Task HardDeleteManager_ManagerIsHardDeleted()
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public async Task HardDeleteManager_ManagerIsHardDeleted(int targetManagerId)
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
-        var recordId = 1;
-        var existedManager = await context.Managers.SingleAsync(m => m.Id == recordId);
-        var expectedManagers = context.Managers.Where(m => m.Id != recordId).ToList();
+        var existedManager = await context.Managers.SingleAsync(m => m.Id == targetManagerId);
+        var expectedManagers = context.Managers.Where(m => m.Id != targetManagerId).ToList();
 
         // Act
         fakeRepository.HardDelete(existedManager);
@@ -82,34 +85,44 @@ public class ManagerRepositoryTests
         Assert.That(actualManagers.OrderBy(m => m.Id), Is.EqualTo(expectedManagers.OrderBy(m => m.Id)));
     }
 
-    [Test]
-    public async Task GetManagerByIdAsync_GetCorrectManager()
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public async Task GetManagerByIdAsync_GetCorrectManager(int targetManagerId)
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
 
         // Act
-        var manager = await fakeRepository.GetOneAsync(m => m.Id == 1);
+        var manager = await fakeRepository.GetOneAsync(m => m.Id == targetManagerId);
 
         // Assert
-        Assert.That(manager, Is.Not.Null);
-        Assert.That(manager.Id, Is.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(manager, Is.Not.Null);
+            Assert.That(manager.Id, Is.EqualTo(targetManagerId));
+        });
     }
 
-    [Test]
-    public async Task GetManagerById_GetCorrectManager()
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public async Task GetManagerById_GetCorrectManager(int targetManagerId)
     {
         // Arrange
         using var context = new ElearningDemoContext(Utilities.TestDbContextOptions());
         var fakeRepository = await CreateRepositoryAsync(context);
 
         // Act
-        var manager = fakeRepository.GetOne(m => m.Id == 1);
+        var manager = fakeRepository.GetOne(m => m.Id == targetManagerId);
 
         // Assert
-        Assert.That(manager, Is.Not.Null);
-        Assert.That(manager.Id, Is.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(manager, Is.Not.Null);
+            Assert.That(manager.Id, Is.EqualTo(targetManagerId));
+        });
     }
 
     [Test]
@@ -123,8 +136,11 @@ public class ManagerRepositoryTests
         var managers = await fakeRepository.GetAllAsync();
 
         // Assert
-        Assert.That(managers, Is.Not.Null);
-        Assert.That(managers.Count(), Is.EqualTo(3));
+        Assert.Multiple(() =>
+        {
+            Assert.That(managers, Is.Not.Null);
+            Assert.That(managers.Count(), Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -138,8 +154,11 @@ public class ManagerRepositoryTests
         var managers = fakeRepository.GetAll();
 
         // Assert
-        Assert.That(managers, Is.Not.Null);
-        Assert.That(managers.Count(), Is.EqualTo(3));   
+        Assert.Multiple(() =>
+        {
+            Assert.That(managers, Is.Not.Null);
+            Assert.That(managers.Count(), Is.EqualTo(3));
+        });
     }
 
     [Test]
@@ -153,10 +172,13 @@ public class ManagerRepositoryTests
         var managers = await fakeRepository.GetAllValidAsync();
 
         // Assert
-        Assert.That(managers, Is.Not.Null);
-        Assert.That(managers.Count(), Is.EqualTo(1));
-        Assert.That(managers.Any(m => m.IsValid == false), Is.False);
-        Assert.That(managers.Any(m => m.IsDeleted == true), Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(managers, Is.Not.Null);
+            Assert.That(managers.Count(), Is.EqualTo(1));
+            Assert.That(managers.Any(m => m.IsValid == false), Is.False);
+            Assert.That(managers.Any(m => m.IsDeleted == true), Is.False);
+        });
     }
 
     [Test]
@@ -170,12 +192,15 @@ public class ManagerRepositoryTests
         var managers = await fakeRepository.GetAllAliveAsync();
 
         // Assert
-        Assert.That(managers, Is.Not.Null);
-        Assert.That(managers.Count(), Is.EqualTo(2));
-        Assert.That(managers.Any(m => m.IsDeleted == true), Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(managers, Is.Not.Null);
+            Assert.That(managers.Count(), Is.EqualTo(2));
+            Assert.That(managers.Any(m => m.IsDeleted == true), Is.False);
+        });
     }
 
-    private async Task<ManagerRepository> CreateRepositoryAsync(ElearningDemoContext context)
+    private static async Task<ManagerRepository> CreateRepositoryAsync(ElearningDemoContext context)
     {
         await GetSeedingManagers(context);
         return new ManagerRepository(context);
