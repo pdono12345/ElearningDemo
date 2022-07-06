@@ -6,7 +6,7 @@ public class ManagerService : BaseService, IManagerService
     {
     }
 
-    public Task<ManagerDTO> GetManagerByIdAsync(int managerId)
+    public Task<ManagerDTO?> GetManagerByIdAsync(int managerId)
     {
         throw new NotImplementedException();
     }
