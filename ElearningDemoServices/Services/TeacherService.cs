@@ -3,6 +3,7 @@
 public class TeacherService : BaseService, ITeacherService
 {
     private readonly ITeacherRepository _teacherRepository;
+
     public TeacherService(IMapper mapper, ITeacherRepository teacherRepository) : base(mapper)
     {
         _teacherRepository = teacherRepository;

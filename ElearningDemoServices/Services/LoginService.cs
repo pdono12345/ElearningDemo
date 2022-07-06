@@ -50,7 +50,7 @@ public class LoginService : BaseService, ILoginService
     /// </summary>
     /// <param name="managerId"></param>
     /// <returns></returns>
-    private ClaimsPrincipal CreateClaimsPrincipal(int managerId)
+    private static ClaimsPrincipal CreateClaimsPrincipal(int managerId)
     {
         var claims = new[] { new Claim(ClaimTypes.Sid, managerId.ToString()) };
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
