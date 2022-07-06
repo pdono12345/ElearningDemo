@@ -2,5 +2,5 @@
 
 public interface IMemberService : IBaseService
 {
-    Task<MemberDTO> GetMemberByIdAsync(int memberId);
+    Task<MemberDTO?> GetMemberByIdAsync(int memberId);
 }
