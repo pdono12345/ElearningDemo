@@ -6,10 +6,11 @@
 
 - **.Net Framework** - .Net6 MVC
 - **ORM** - EntityFrameworkCore
+- **Mapping Tool** - Automapper
 - **Log** - Serilog
 - **Design Pattern** - Factory Pattern
-- **單元測試** - NUnit、NSubstitute
-- **三層式架構** - PL（controller + view）、BLL（service）、DAL（repository）
+- **Unit Test** - NUnit、NSubstitute
+- **Three Tiers Architecture** - PL（controller + view）、BLL（service）、DAL（repository）
 
 ## 主要功能
 
@@ -17,3 +18,6 @@
 - 教室系統（老師建立教室，學生可以加入）
 - 線上測驗系統（老師建立測驗，學生可以答題）
 
+## 資料表設計
+
+![](README.assets/db.drawio.png)
