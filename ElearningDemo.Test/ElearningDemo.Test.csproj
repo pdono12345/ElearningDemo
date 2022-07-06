@@ -21,4 +21,8 @@
     <ProjectReference Include="..\ElearningDemo\ElearningDemo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UnitTest\Normal\" />
+  </ItemGroup>
+
 </Project>
