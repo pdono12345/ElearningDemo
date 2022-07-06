@@ -1,25 +1,12 @@
-﻿using System.Linq.Expressions;
-
-namespace ElearningDemoServices.Test.UnitTest;
+﻿namespace ElearningDemoServices.Test.UnitTest;
 
 public class TeacherServiceTest
 {
-    private ITeacherRepository _fakeRepository;
-    private IMapper _mapper;
-    private TeacherService _target;
+    private readonly IFakeInstanceGenerator _fakeInstanceGenerator;
 
-    [SetUp]
-    public void Setup()
+    public TeacherServiceTest()
     {
-        var mappingConfig = new MapperConfiguration(mc =>
-        {
-            mc.AddProfile(new AutoMapping());
-        });
-        IMapper mapper = mappingConfig.CreateMapper();
-
-        _fakeRepository = Substitute.For<ITeacherRepository>();
-        _mapper = mapper;
-        _target = new TeacherService(_mapper, _fakeRepository);
+        _fakeInstanceGenerator = new FakeInstanceGenerator();
     }
 
     [Test]
@@ -28,36 +15,55 @@ public class TeacherServiceTest
         // Arrange
         var teacherId = 1;
         var fakeTeacher = new Teacher { Id = 1, Name = "test" };
-        _fakeRepository.GetOneAsync(Arg.Any<Expression<Func<Teacher, bool>>>()).Returns(Task.FromResult(fakeTeacher));
+
+        var _fakeMapper = _fakeInstanceGenerator.FakeMapper();
+        var _fakeTeacherRepository = _fakeInstanceGenerator.FakeTeacherRepository();
+        var _teacherService = CreateNewTeacherService(_fakeMapper, _fakeTeacherRepository);
+
+        _fakeTeacherRepository.GetOneAsync(Arg.Any<Expression<Func<Teacher, bool>>>()).Returns(fakeTeacher);
 
         // Act
-        var actualTeacherDTO = await _target.GetTeacherByIdAsync(teacherId);
+        var actualTeacherDTO = await _teacherService.GetTeacherByIdAsync(teacherId);
 
         // Assert
-        Assert.That(actualTeacherDTO, Is.Not.Null);
-        Assert.That(actualTeacherDTO.Id, Is.EqualTo(teacherId));
+        Assert.Multiple(() =>
+        {
+            Assert.That(actualTeacherDTO, Is.Not.Null);
+            Assert.That(actualTeacherDTO.Id, Is.EqualTo(teacherId));
+        });
     }
 
     [Test]
     public async Task GetAllValidTeachersAsync_Empty_ReturnAllValidTeacher()
     {
         // Arrange
-        IEnumerable<Teacher> fakeTeachers = new List<Teacher>() 
+        IEnumerable<Teacher> fakeTeachers = new List<Teacher>()
         {
             new Teacher { IsValid = true, IsDeleted = false },
             new Teacher { IsValid = true, IsDeleted = true },
             new Teacher { IsValid = false, IsDeleted = false },
         };
-        _fakeRepository.GetAllValidAsync().Returns(Task.FromResult(fakeTeachers.Where(m => m.IsValid).Where(m => !m.IsDeleted)));
+
+        var _fakeMapper = _fakeInstanceGenerator.FakeMapper();
+        var _fakeTeacherRepository = _fakeInstanceGenerator.FakeTeacherRepository();
+        var _teacherService = CreateNewTeacherService(_fakeMapper, _fakeTeacherRepository);
+
+        _fakeTeacherRepository.GetAllValidAsync().Returns(fakeTeachers.Where(m => m.IsValid).Where(m => !m.IsDeleted));
 
         // Act
-        var actualTeacherDTOs = await _target.GetAllValidTeachersAsync();
-
+        var actualTeacherDTOs = await _teacherService.GetAllValidTeachersAsync();
+        
         // Assert
-        Assert.That(actualTeacherDTOs.Count(), Is.EqualTo(1));
-        Assert.That(actualTeacherDTOs.Any(m => m.IsValid == false), Is.False);
-        Assert.That(actualTeacherDTOs.Any(m => m.IsDeleted == true), Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(actualTeacherDTOs, Has.Count.EqualTo(1));
+            Assert.That(actualTeacherDTOs.Any(m => m.IsValid == false), Is.False);
+            Assert.That(actualTeacherDTOs.Any(m => m.IsDeleted == true), Is.False);
+        });
     }
 
-
+    private static TeacherService CreateNewTeacherService(IMapper mapper, ITeacherRepository teacherRepository)
+    {
+        return new TeacherService(mapper, teacherRepository);
+    }
 }
